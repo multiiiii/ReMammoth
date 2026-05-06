@@ -45,46 +45,86 @@ class _AddEditNoteDialogState extends State<AddEditNoteDialog> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.note != null;
+    final colorScheme = Theme.of(context).colorScheme;
+    final bg = colorScheme.primaryContainer;
+    final onBg = colorScheme.onPrimaryContainer;
+    final blue = colorScheme.primary;
+
     return AlertDialog(
-      title: Text(isEditing ? 'Edit note' : 'Add note'),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: _titleController,
-              autofocus: true,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Title *',
-                border: OutlineInputBorder(),
+      backgroundColor: bg,
+      // Reduce horizontal inset so the dialog fills more of the screen width.
+      insetPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      title: Text(isEditing ? 'Edit note' : 'Add note',
+          style: TextStyle(color: onBg)),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: TextStyle(color: onBg.withValues(alpha: 0.7)),
+              floatingLabelStyle: TextStyle(color: onBg),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: onBg.withValues(alpha: 0.4)),
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Title is required' : null,
-              onFieldSubmitted: (_) => _submit(),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _descriptionController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Description (optional)',
-                border: OutlineInputBorder(),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: onBg.withValues(alpha: 0.4)),
               ),
-              maxLines: null,
-              minLines: 3,
-              keyboardType: TextInputType.multiline,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: blue, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: colorScheme.error),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: colorScheme.error, width: 2),
+              ),
+              errorStyle: TextStyle(color: colorScheme.error),
             ),
-          ],
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _titleController,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(color: onBg),
+                  decoration: const InputDecoration(labelText: 'Title *'),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Title is required'
+                      : null,
+                  onFieldSubmitted: (_) => _submit(),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _descriptionController,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(color: onBg),
+                  decoration:
+                      const InputDecoration(labelText: 'Description (optional)'),
+                  maxLines: null,
+                  minLines: 5,
+                  keyboardType: TextInputType.multiline,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
       actions: [
         TextButton(
+          style: TextButton.styleFrom(foregroundColor: onBg),
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
         FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: blue,
+            foregroundColor: Colors.white,
+          ),
           onPressed: _submit,
           child: Text(isEditing ? 'Save' : 'Add'),
         ),

@@ -52,61 +52,112 @@ class _AddEditFriendDialogState extends State<AddEditFriendDialog> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.friend != null;
+    final colorScheme = Theme.of(context).colorScheme;
+    final bg = colorScheme.primaryContainer;
+    final onBg = colorScheme.onPrimaryContainer;
+    final blue = colorScheme.primary;
+
     final birthdayText = _birthday != null
         ? DateFormat('d MMM yyyy').format(_birthday!)
         : 'Not set';
 
     return AlertDialog(
-      title: Text(isEditing ? 'Edit friend' : 'Add friend'),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: _nameController,
-              autofocus: true,
-              textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(
-                labelText: 'Name *',
-                border: OutlineInputBorder(),
+      backgroundColor: bg,
+      insetPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      title: Text(isEditing ? 'Edit friend' : 'Add friend',
+          style: TextStyle(color: onBg)),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: TextStyle(color: onBg.withValues(alpha: 0.7)),
+              floatingLabelStyle: TextStyle(color: onBg),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: onBg.withValues(alpha: 0.4)),
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
-              onFieldSubmitted: (_) => _submit(),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: onBg.withValues(alpha: 0.4)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: blue, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: colorScheme.error),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: colorScheme.error, width: 2),
+              ),
+              errorStyle: TextStyle(color: colorScheme.error),
             ),
-            const SizedBox(height: 12),
-            InkWell(
-              onTap: _pickBirthday,
-              borderRadius: BorderRadius.circular(4),
-              child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Birthday (optional)',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.cake_outlined),
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                  style: TextStyle(color: onBg),
+                  decoration: const InputDecoration(labelText: 'Name *'),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Name is required'
+                      : null,
+                  onFieldSubmitted: (_) => _submit(),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(birthdayText),
-                    if (_birthday != null)
-                      GestureDetector(
-                        onTap: () => setState(() => _birthday = null),
-                        child: const Icon(Icons.clear, size: 16),
+                const SizedBox(height: 12),
+                InkWell(
+                  onTap: _pickBirthday,
+                  borderRadius: BorderRadius.circular(4),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: 'Birthday (optional)',
+                      labelStyle:
+                          TextStyle(color: onBg.withValues(alpha: 0.7)),
+                      floatingLabelStyle: TextStyle(color: onBg),
+                      border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: onBg.withValues(alpha: 0.4)),
                       ),
-                  ],
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: onBg.withValues(alpha: 0.4)),
+                      ),
+                      suffixIcon:
+                          Icon(Icons.cake_outlined, color: onBg),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(birthdayText, style: TextStyle(color: onBg)),
+                        if (_birthday != null)
+                          GestureDetector(
+                            onTap: () => setState(() => _birthday = null),
+                            child: Icon(Icons.clear, size: 16, color: onBg),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       actions: [
         TextButton(
+          style: TextButton.styleFrom(foregroundColor: onBg),
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
         FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: blue,
+            foregroundColor: Colors.white,
+          ),
           onPressed: _submit,
           child: Text(isEditing ? 'Save' : 'Add'),
         ),
