@@ -46,37 +46,36 @@ class _CopyNoteDialogState extends State<CopyNoteDialog> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final friends = _friends;
-    // Blue background matching scaffold/app bars.
-    final bg = colorScheme.primary;
-    // Orange accent matching cards and FABs.
-    final accent = colorScheme.primaryContainer;
-    final onAccent = colorScheme.onPrimaryContainer;
+    // Orange background matching note cards.
+    final bg = colorScheme.primaryContainer;
+    final onBg = colorScheme.onPrimaryContainer;
+    // Blue for action buttons on the orange surface.
+    final blue = colorScheme.primary;
 
     Widget content;
     if (friends == null) {
       content = SizedBox(
         height: 80,
-        child: Center(child: CircularProgressIndicator(color: accent)),
+        child: Center(child: CircularProgressIndicator(color: blue)),
       );
     } else if (friends.isEmpty) {
       content = Text(
         'No other friends to copy to.',
-        style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+        style: TextStyle(color: onBg.withValues(alpha: 0.75)),
       );
     } else {
       content = SizedBox(
         width: double.maxFinite,
         child: Theme(
-          // Override checkbox colors so they are visible on the blue background.
           data: Theme.of(context).copyWith(
             checkboxTheme: CheckboxThemeData(
               fillColor: WidgetStateProperty.resolveWith((states) =>
                   states.contains(WidgetState.selected)
-                      ? accent
+                      ? blue
                       : Colors.transparent),
-              checkColor: WidgetStatePropertyAll(onAccent),
+              checkColor: const WidgetStatePropertyAll(Colors.white),
               side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.6), width: 1.5),
+                  color: onBg.withValues(alpha: 0.4), width: 1.5),
             ),
           ),
           child: ListView.builder(
@@ -85,8 +84,7 @@ class _CopyNoteDialogState extends State<CopyNoteDialog> {
             itemBuilder: (_, i) {
               final friend = friends[i];
               return CheckboxListTile(
-                title: Text(friend.name,
-                    style: const TextStyle(color: Colors.white)),
+                title: Text(friend.name, style: TextStyle(color: onBg)),
                 value: _selected.contains(friend.id),
                 onChanged: (checked) => setState(() {
                   if (checked == true) {
@@ -105,21 +103,20 @@ class _CopyNoteDialogState extends State<CopyNoteDialog> {
 
     return AlertDialog(
       backgroundColor: bg,
-      title: const Text('Copy to friend',
-          style: TextStyle(color: Colors.white)),
+      title: Text('Copy to friend', style: TextStyle(color: onBg)),
       content: content,
       actions: [
         TextButton(
-          style: TextButton.styleFrom(foregroundColor: Colors.white),
+          style: TextButton.styleFrom(foregroundColor: onBg),
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
         FilledButton(
           style: FilledButton.styleFrom(
-            backgroundColor: accent,
-            foregroundColor: onAccent,
-            disabledBackgroundColor: accent.withValues(alpha: 0.35),
-            disabledForegroundColor: onAccent.withValues(alpha: 0.35),
+            backgroundColor: blue,
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: blue.withValues(alpha: 0.35),
+            disabledForegroundColor: Colors.white.withValues(alpha: 0.35),
           ),
           onPressed:
               (friends != null && _selected.isNotEmpty) ? _confirm : null,
