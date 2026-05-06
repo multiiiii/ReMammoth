@@ -1,10 +1,12 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../database/app_database.dart';
+import 'dialogs/copy_note_dialog.dart';
 
-enum _NoteAction { pin, delete }
+enum _NoteAction { pin, copy, delete }
 
 class NoteCard extends StatelessWidget {
   const NoteCard({
@@ -19,6 +21,14 @@ class NoteCard extends StatelessWidget {
   final Future<void> Function(Note) onEdit;
   final Future<void> Function(int) onDelete;
   final Future<void> Function(Note) onTogglePin;
+
+  void _showCopyDialog(BuildContext context) {
+    final db = context.read<AppDatabase>();
+    showDialog<void>(
+      context: context,
+      builder: (_) => CopyNoteDialog(db: db, note: note),
+    );
+  }
 
   void _showExpanded(BuildContext context) {
     final bg = Theme.of(context).colorScheme.secondaryContainer;
@@ -92,6 +102,8 @@ class NoteCard extends StatelessWidget {
                     onSelected: (action) {
                       if (action == _NoteAction.pin) {
                         onTogglePin(note);
+                      } else if (action == _NoteAction.copy) {
+                        _showCopyDialog(context);
                       } else {
                         _showDeleteDialog(context);
                       }
@@ -156,6 +168,14 @@ class NoteCard extends StatelessWidget {
           leading: Icon(
               note.isPinned ? Icons.push_pin : Icons.push_pin_outlined),
           title: Text(note.isPinned ? 'Unpin' : 'Pin'),
+          contentPadding: EdgeInsets.zero,
+        ),
+      ),
+      const PopupMenuItem(
+        value: _NoteAction.copy,
+        child: ListTile(
+          leading: Icon(Icons.copy_outlined),
+          title: Text('Copy to friend'),
           contentPadding: EdgeInsets.zero,
         ),
       ),
@@ -327,6 +347,14 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
                             if (!context.mounted) return;
                             Navigator.of(context).pop();
                             await widget.onTogglePin(note);
+                          } else if (action == _NoteAction.copy) {
+                            if (!context.mounted) return;
+                            final db = context.read<AppDatabase>();
+                            await showDialog<void>(
+                              context: context,
+                              builder: (_) =>
+                                  CopyNoteDialog(db: db, note: note),
+                            );
                           } else {
                             final confirmed = await _confirmDelete();
                             if (!confirmed || !context.mounted) return;
@@ -344,6 +372,14 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
                                   : Icons.push_pin_outlined),
                               title: Text(
                                   note.isPinned ? 'Unpin' : 'Pin'),
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                          ),
+                          const PopupMenuItem(
+                            value: _NoteAction.copy,
+                            child: ListTile(
+                              leading: Icon(Icons.copy_outlined),
+                              title: Text('Copy to friend'),
                               contentPadding: EdgeInsets.zero,
                             ),
                           ),
