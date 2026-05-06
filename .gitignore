@@ -2,6 +2,9 @@
 .claude/
 .metadata
 
+# Old/archived assets not used by the app
+assets/images/old/
+
 # Flutter generated plugin registrants (recreated by `flutter pub get`)
 **/flutter/generated_plugin_registrant.cc
 **/flutter/generated_plugin_registrant.h
