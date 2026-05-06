@@ -44,51 +44,83 @@ class _CopyNoteDialogState extends State<CopyNoteDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final friends = _friends;
+    // Blue background matching scaffold/app bars.
+    final bg = colorScheme.primary;
+    // Orange accent matching cards and FABs.
+    final accent = colorScheme.primaryContainer;
+    final onAccent = colorScheme.onPrimaryContainer;
 
     Widget content;
     if (friends == null) {
-      content = const SizedBox(
+      content = SizedBox(
         height: 80,
-        child: Center(child: CircularProgressIndicator()),
+        child: Center(child: CircularProgressIndicator(color: accent)),
       );
     } else if (friends.isEmpty) {
-      content = const Text('No other friends to copy to.');
+      content = Text(
+        'No other friends to copy to.',
+        style: TextStyle(color: Colors.white.withValues(alpha: 0.75)),
+      );
     } else {
       content = SizedBox(
         width: double.maxFinite,
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: friends.length,
-          itemBuilder: (_, i) {
-            final friend = friends[i];
-            final selected = _selected.contains(friend.id);
-            return CheckboxListTile(
-              title: Text(friend.name),
-              value: selected,
-              onChanged: (checked) => setState(() {
-                if (checked == true) {
-                  _selected.add(friend.id);
-                } else {
-                  _selected.remove(friend.id);
-                }
-              }),
-              contentPadding: EdgeInsets.zero,
-            );
-          },
+        child: Theme(
+          // Override checkbox colors so they are visible on the blue background.
+          data: Theme.of(context).copyWith(
+            checkboxTheme: CheckboxThemeData(
+              fillColor: WidgetStateProperty.resolveWith((states) =>
+                  states.contains(WidgetState.selected)
+                      ? accent
+                      : Colors.transparent),
+              checkColor: WidgetStatePropertyAll(onAccent),
+              side: BorderSide(
+                  color: Colors.white.withValues(alpha: 0.6), width: 1.5),
+            ),
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: friends.length,
+            itemBuilder: (_, i) {
+              final friend = friends[i];
+              return CheckboxListTile(
+                title: Text(friend.name,
+                    style: const TextStyle(color: Colors.white)),
+                value: _selected.contains(friend.id),
+                onChanged: (checked) => setState(() {
+                  if (checked == true) {
+                    _selected.add(friend.id);
+                  } else {
+                    _selected.remove(friend.id);
+                  }
+                }),
+                contentPadding: EdgeInsets.zero,
+              );
+            },
+          ),
         ),
       );
     }
 
     return AlertDialog(
-      title: const Text('Copy to friend'),
+      backgroundColor: bg,
+      title: const Text('Copy to friend',
+          style: TextStyle(color: Colors.white)),
       content: content,
       actions: [
         TextButton(
+          style: TextButton.styleFrom(foregroundColor: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
         FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: accent,
+            foregroundColor: onAccent,
+            disabledBackgroundColor: accent.withValues(alpha: 0.35),
+            disabledForegroundColor: onAccent.withValues(alpha: 0.35),
+          ),
           onPressed:
               (friends != null && _selected.isNotEmpty) ? _confirm : null,
           child: const Text('OK'),
