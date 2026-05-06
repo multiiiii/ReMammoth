@@ -4,6 +4,9 @@
 
 ReMammoth is an offline-first personal memory app for Android. It lets users keep personal notes and notes about friends (with optional birthdays). All data is stored locally in SQLite — no accounts, no cloud sync.
 
+## Adding Features and Fixing Bugs
+When you work on a new feature or on fixing a bug, create a git branch first. Then work on that branch for the remainder of that session.
+
 ---
 
 ## Tech stack
