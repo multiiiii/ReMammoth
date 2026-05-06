@@ -1,6 +1,6 @@
 # ReMammoth
 
-> How much does a mammoth weigh? Enough to break the ice. It also remembers birthdays and the gift idea it had months ago.
+> How much does a mammoth weigh? Enough to break the ice. It also remembers your birthday and the gift idea it had months ago.
 
 ReMammoth is a simple, offline-first personal memory app for Android. Keep notes about yourself and the people in your life — without cloud accounts, subscriptions, or ads.
 
