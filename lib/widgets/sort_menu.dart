@@ -31,12 +31,12 @@ class SortMenu extends StatelessWidget {
       value: value,
       child: Row(
         children: [
-          Icon(icon, size: 18),
+          Icon(icon, size: 18, color: Colors.white),
           const SizedBox(width: 8),
-          Text(label),
+          Text(label, style: const TextStyle(color: Colors.white)),
           if (currentSort == value) ...[
             const Spacer(),
-            const Icon(Icons.check, size: 16),
+            const Icon(Icons.check, size: 16, color: Colors.white),
           ],
         ],
       ),

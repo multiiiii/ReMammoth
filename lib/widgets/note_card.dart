@@ -166,16 +166,19 @@ class NoteCard extends StatelessWidget {
         value: _NoteAction.pin,
         child: ListTile(
           leading: Icon(
-              note.isPinned ? Icons.push_pin : Icons.push_pin_outlined),
-          title: Text(note.isPinned ? 'Unpin' : 'Pin'),
+              note.isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+              color: Colors.white),
+          title: Text(note.isPinned ? 'Unpin' : 'Pin',
+              style: const TextStyle(color: Colors.white)),
           contentPadding: EdgeInsets.zero,
         ),
       ),
       const PopupMenuItem(
         value: _NoteAction.copy,
         child: ListTile(
-          leading: Icon(Icons.copy_outlined),
-          title: Text('Copy to friend'),
+          leading: Icon(Icons.copy_outlined, color: Colors.white),
+          title: Text('Copy to friend',
+              style: TextStyle(color: Colors.white)),
           contentPadding: EdgeInsets.zero,
         ),
       ),
@@ -367,19 +370,25 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
                           PopupMenuItem(
                             value: _NoteAction.pin,
                             child: ListTile(
-                              leading: Icon(note.isPinned
-                                  ? Icons.push_pin
-                                  : Icons.push_pin_outlined),
+                              leading: Icon(
+                                  note.isPinned
+                                      ? Icons.push_pin
+                                      : Icons.push_pin_outlined,
+                                  color: Colors.white),
                               title: Text(
-                                  note.isPinned ? 'Unpin' : 'Pin'),
+                                  note.isPinned ? 'Unpin' : 'Pin',
+                                  style: const TextStyle(
+                                      color: Colors.white)),
                               contentPadding: EdgeInsets.zero,
                             ),
                           ),
                           const PopupMenuItem(
                             value: _NoteAction.copy,
                             child: ListTile(
-                              leading: Icon(Icons.copy_outlined),
-                              title: Text('Copy to friend'),
+                              leading: Icon(Icons.copy_outlined,
+                                  color: Colors.white),
+                              title: Text('Copy to friend',
+                                  style: TextStyle(color: Colors.white)),
                               contentPadding: EdgeInsets.zero,
                             ),
                           ),

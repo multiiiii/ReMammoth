@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const appBlue = Color(0xFF023B67);
+const appBlueMid = Color(0xFF034F8C);
 const appOrange = Color(0xFFDE781C);
 
 const _navy = appBlue;
@@ -20,6 +21,7 @@ final ThemeData appTheme = ThemeData(
   useMaterial3: true,
   scaffoldBackgroundColor: appBlue,
   cardTheme: const CardThemeData(surfaceTintColor: Colors.transparent),
+  popupMenuTheme: const PopupMenuThemeData(color: appBlueMid),
   appBarTheme: const AppBarTheme(
     backgroundColor: appBlue,
     foregroundColor: Colors.white,
@@ -63,6 +65,7 @@ final ThemeData appTheme = ThemeData(
 final ThemeData appDarkTheme = ThemeData(
   useMaterial3: true,
   scaffoldBackgroundColor: const Color(0xFF011C32),
+  popupMenuTheme: const PopupMenuThemeData(color: appBlueMid),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color(0xFF011C32),
     foregroundColor: Colors.white,

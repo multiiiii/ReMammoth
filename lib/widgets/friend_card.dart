@@ -122,18 +122,24 @@ class FriendCard extends StatelessWidget {
                       PopupMenuItem(
                         value: _FriendAction.pin,
                         child: ListTile(
-                          leading: Icon(friend.isPinned
-                              ? Icons.push_pin
-                              : Icons.push_pin_outlined),
-                          title: Text(friend.isPinned ? 'Unpin' : 'Pin'),
+                          leading: Icon(
+                              friend.isPinned
+                                  ? Icons.push_pin
+                                  : Icons.push_pin_outlined,
+                              color: Colors.white),
+                          title: Text(friend.isPinned ? 'Unpin' : 'Pin',
+                              style:
+                                  const TextStyle(color: Colors.white)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
                       const PopupMenuItem(
                         value: _FriendAction.edit,
                         child: ListTile(
-                          leading: Icon(Icons.edit_outlined),
-                          title: Text('Edit'),
+                          leading: Icon(Icons.edit_outlined,
+                              color: Colors.white),
+                          title: Text('Edit',
+                              style: TextStyle(color: Colors.white)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),

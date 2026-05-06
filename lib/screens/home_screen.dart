@@ -7,6 +7,7 @@ import 'friends_screen.dart';
 import 'personal_notes_screen.dart';
 
 const _blue = Color(0xFF023B67);
+const _blueMid = Color(0xFF034F8C);
 const _orange = Color(0xFFDE781C);
 
 class HomeScreen extends StatelessWidget {
@@ -16,23 +17,29 @@ class HomeScreen extends StatelessWidget {
     final db = context.read<AppDatabase>();
     showModalBottomSheet<void>(
       context: context,
+      backgroundColor: _blueMid,
       builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.upload_file),
-              title: const Text('Export backup'),
-              subtitle: const Text('Share your data as a file'),
+              leading: const Icon(Icons.upload_file, color: Colors.white),
+              title: const Text('Export backup',
+                  style: TextStyle(color: Colors.white)),
+              subtitle: Text('Share your data as a file',
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
               onTap: () {
                 Navigator.of(sheetContext).pop();
                 BackupService.exportBackup(db, context);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.download_for_offline_outlined),
-              title: const Text('Import backup'),
-              subtitle: const Text('Restore from a backup file'),
+              leading: const Icon(Icons.download_for_offline_outlined,
+                  color: Colors.white),
+              title: const Text('Import backup',
+                  style: TextStyle(color: Colors.white)),
+              subtitle: Text('Restore from a backup file',
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
               onTap: () {
                 Navigator.of(sheetContext).pop();
                 BackupService.importBackup(db, context);
