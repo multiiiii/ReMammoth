@@ -7,7 +7,7 @@ import 'friends_screen.dart';
 import 'personal_notes_screen.dart';
 
 const _blue = Color(0xFF023B67);
-const _orange = Color(0xFFDC771F);
+const _orange = Color(0xFFDE781C);
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 180),
                       child: Image.asset(
-                        'assets/images/logo.jpg',
+                        'assets/images/logo.png',
                         fit: BoxFit.contain,
                       ),
                     ),
