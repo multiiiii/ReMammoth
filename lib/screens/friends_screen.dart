@@ -35,6 +35,11 @@ class _FriendsScreenState extends State<FriendsScreen> {
         friendId: friendId,
         isPinned: true,
       );
+      await db.notesDao.insertNote(
+        title: 'Stuff to talk about',
+        friendId: friendId,
+        isPinned: true,
+      );
     }
   }
 

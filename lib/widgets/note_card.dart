@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../database/app_database.dart';
+import '../theme/app_theme.dart';
 import 'dialogs/copy_note_dialog.dart';
 
 enum _NoteAction { pin, copy, delete }
@@ -142,6 +143,7 @@ class NoteCard extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: appBlue,
         title: const Text('Delete note'),
         content: Text('Delete "${note.title}"?'),
         actions: [
@@ -261,6 +263,7 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: appBlue,
         title: const Text('Delete note'),
         content: Text('Delete "${widget.note.title}"?'),
         actions: [
