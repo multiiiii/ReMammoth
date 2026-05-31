@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../database/app_database.dart';
+import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
 import 'dialogs/copy_note_dialog.dart';
 
@@ -119,6 +120,9 @@ class NoteCard extends StatelessWidget {
                   desc,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: onCard.withValues(alpha: 0.75),
+                        fontSize: context
+                            .watch<SettingsProvider>()
+                            .noteFontSize,
                       ),
                   maxLines: 6,
                   overflow: TextOverflow.ellipsis,
@@ -423,8 +427,12 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
                   children: [
                     TextField(
                       controller: _descController,
-                      style: textTheme.bodyMedium
-                          ?.copyWith(color: onCard),
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: onCard,
+                        fontSize: context
+                            .watch<SettingsProvider>()
+                            .noteFontSize,
+                      ),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Note',

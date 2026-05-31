@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../database/app_database.dart';
+import '../../providers/settings_provider.dart';
 
 class AddEditNoteDialog extends StatefulWidget {
   const AddEditNoteDialog({super.key, this.note});
@@ -102,7 +104,12 @@ class _AddEditNoteDialogState extends State<AddEditNoteDialog> {
                 TextFormField(
                   controller: _descriptionController,
                   textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(color: onBg),
+                  style: TextStyle(
+                    color: onBg,
+                    fontSize: context
+                        .watch<SettingsProvider>()
+                        .noteFontSize,
+                  ),
                   decoration:
                       const InputDecoration(labelText: 'Description (optional)'),
                   maxLines: null,

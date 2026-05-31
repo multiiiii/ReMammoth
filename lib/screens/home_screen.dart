@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../database/app_database.dart';
+import '../providers/settings_provider.dart';
 import '../services/backup_service.dart';
 import 'friends_screen.dart';
 import 'personal_notes_screen.dart';
@@ -12,6 +13,59 @@ const _orange = Color(0xFFDE781C);
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  void _showSettingsSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: _blueMid,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (_, setState) {
+            final settings = sheetContext.read<SettingsProvider>();
+            final currentSize = settings.noteFontSize;
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Note font size',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 16),
+                    SegmentedButton<double>(
+                      segments: const [
+                        ButtonSegment(value: 12.0, label: Text('Small')),
+                        ButtonSegment(value: 14.0, label: Text('Medium')),
+                        ButtonSegment(value: 16.0, label: Text('Large')),
+                      ],
+                      selected: {currentSize},
+                      onSelectionChanged: (value) {
+                        settings.setNoteFontSize(value.first);
+                        setState(() {});
+                      },
+                      style: SegmentedButton.styleFrom(
+                        backgroundColor: _blue,
+                        foregroundColor: Colors.white,
+                        selectedBackgroundColor: _orange,
+                        selectedForegroundColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   void _showBackupSheet(BuildContext context) {
     final db = context.read<AppDatabase>();
@@ -120,13 +174,24 @@ class HomeScreen extends StatelessWidget {
             Positioned(
               top: 8,
               right: 8,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.settings_backup_restore,
-                  color: Colors.white,
-                ),
-                tooltip: 'Backup & Restore',
-                onPressed: () => _showBackupSheet(context),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.settings_outlined,
+                        color: Colors.white),
+                    tooltip: 'Settings',
+                    onPressed: () => _showSettingsSheet(context),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.settings_backup_restore,
+                      color: Colors.white,
+                    ),
+                    tooltip: 'Backup & Restore',
+                    onPressed: () => _showBackupSheet(context),
+                  ),
+                ],
               ),
             ),
           ],
