@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../database/app_database.dart';
 import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
+import 'bullet_text_controller.dart';
 import 'dialogs/copy_note_dialog.dart';
 
 enum _NoteAction { pin, copy, delete }
@@ -236,8 +237,7 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.note.title);
-    _descController =
-        TextEditingController(text: widget.note.description ?? '');
+    _descController = makeBulletController(widget.note.description);
   }
 
   @override
@@ -251,7 +251,7 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
     if (_deleted || _saved) return;
     _saved = true;
     final newTitle = _titleController.text.trim();
-    final newDesc = _descController.text.trim();
+    final newDesc = cleanBulletDesc(_descController.text);
     final note = widget.note;
     if (newTitle.isNotEmpty &&
         (newTitle != note.title || newDesc != (note.description ?? ''))) {

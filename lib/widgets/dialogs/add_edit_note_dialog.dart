@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../database/app_database.dart';
 import '../../providers/settings_provider.dart';
+import '../bullet_text_controller.dart';
 
 class AddEditNoteDialog extends StatefulWidget {
   const AddEditNoteDialog({super.key, this.note});
@@ -22,8 +23,7 @@ class _AddEditNoteDialogState extends State<AddEditNoteDialog> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.note?.title ?? '');
-    _descriptionController =
-        TextEditingController(text: widget.note?.description ?? '');
+    _descriptionController = makeBulletController(widget.note?.description);
   }
 
   @override
@@ -35,11 +35,10 @@ class _AddEditNoteDialogState extends State<AddEditNoteDialog> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      final desc = cleanBulletDesc(_descriptionController.text);
       Navigator.of(context).pop((
         title: _titleController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
+        description: desc.isEmpty ? null : desc,
       ));
     }
   }
