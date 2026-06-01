@@ -431,7 +431,7 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
                         color: onCard,
                         fontSize: context
                             .watch<SettingsProvider>()
-                            .noteFontSize,
+                            .expandedNoteFontSize,
                       ),
                       decoration: InputDecoration(
                         border: InputBorder.none,

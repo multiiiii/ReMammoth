@@ -9,6 +9,8 @@ class SettingsProvider extends ChangeNotifier {
 
   double get noteFontSize => _service.noteFontSize;
 
+  double get expandedNoteFontSize => noteFontSize + 2.0;
+
   Future<void> setNoteFontSize(double size) async {
     await _service.setNoteFontSize(size);
     notifyListeners();
