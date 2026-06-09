@@ -11,11 +11,10 @@ class MainActivity : FlutterActivity() {
 
     private var lastAppliedScheme: String? = null
 
-    private val allAliases = listOf(
-        "com.remammoth.remammoth.MainActivityDefaultBlue",
-        "com.remammoth.remammoth.MainActivityFireIce",
-        "com.remammoth.remammoth.MainActivityDarkMode",
-        "com.remammoth.remammoth.MainActivityJungle",
+    private val schemeAliases = mapOf(
+        "fireIce"  to "com.remammoth.remammoth.MainActivityFireIce",
+        "darkMode" to "com.remammoth.remammoth.MainActivityDarkMode",
+        "jungle"   to "com.remammoth.remammoth.MainActivityJungle",
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,26 +38,33 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun applyLauncherIcon(scheme: String) {
-        val target = "com.remammoth.remammoth." + when (scheme) {
-            "fireIce"  -> "MainActivityFireIce"
-            "darkMode" -> "MainActivityDarkMode"
-            "jungle"   -> "MainActivityJungle"
-            else       -> "MainActivityDefaultBlue"
+        val targetAlias = schemeAliases[scheme]
+
+        if (targetAlias == null) {
+            // Classic Blue: show MainActivity's own launcher entry, hide all aliases
+            setComponent(packageName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+            for (alias in schemeAliases.values) {
+                setComponent(alias, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
+            }
+        } else {
+            // Non-default: show the alias icon, hide MainActivity's launcher entry
+            // Enable target alias first so the icon is never absent from the launcher
+            setComponent(targetAlias, PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+            for ((_, alias) in schemeAliases) {
+                if (alias != targetAlias) {
+                    setComponent(alias, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
+                }
+            }
+            setComponent(packageName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
         }
+    }
+
+    private fun setComponent(name: String, state: Int) {
         packageManager.setComponentEnabledSetting(
-            ComponentName(packageName, target),
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            ComponentName(packageName, name),
+            state,
             PackageManager.DONT_KILL_APP,
         )
-        for (alias in allAliases) {
-            if (alias != target) {
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(packageName, alias),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP,
-                )
-            }
-        }
     }
 
     private fun storedSchemeName(): String {

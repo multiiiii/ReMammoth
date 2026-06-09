@@ -20,20 +20,12 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-        </activity>
-
-        <!-- Classic Blue — enabled by default -->
-        <activity-alias
-            android:name=".MainActivityDefaultBlue"
-            android:enabled="true"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:targetActivity=".MainActivity">
+            <!-- Classic Blue: MainActivity is the default launcher entry -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity-alias>
+        </activity>
 
         <!-- Fire & Ice — disabled by default -->
         <activity-alias
