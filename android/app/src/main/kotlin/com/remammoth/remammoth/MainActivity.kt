@@ -40,9 +40,11 @@ class MainActivity : FlutterActivity() {
     private fun applyLauncherIcon(scheme: String) {
         val targetAlias = schemeAliases[scheme]
 
+        val mainActivity = "$packageName.MainActivity"
+
         if (targetAlias == null) {
             // Classic Blue: show MainActivity's own launcher entry, hide all aliases
-            setComponent(packageName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+            setComponent(mainActivity, PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
             for (alias in schemeAliases.values) {
                 setComponent(alias, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
             }
@@ -55,7 +57,7 @@ class MainActivity : FlutterActivity() {
                     setComponent(alias, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
                 }
             }
-            setComponent(packageName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
+            setComponent(mainActivity, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
         }
     }
 
