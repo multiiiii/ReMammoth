@@ -20,11 +20,60 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+        </activity>
+
+        <!-- Classic Blue — enabled by default -->
+        <activity-alias
+            android:name=".MainActivityDefaultBlue"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:targetActivity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <!-- Fire & Ice — disabled by default -->
+        <activity-alias
+            android:name=".MainActivityFireIce"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_fireice"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Dark Mode — disabled by default -->
+        <activity-alias
+            android:name=".MainActivityDarkMode"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_darkmode"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Jungle — disabled by default -->
+        <activity-alias
+            android:name=".MainActivityJungle"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_jungle"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
