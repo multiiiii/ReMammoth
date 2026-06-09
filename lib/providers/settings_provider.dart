@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/app_color_scheme.dart';
 import '../services/settings_service.dart';
 
 class SettingsProvider extends ChangeNotifier {
@@ -13,6 +14,13 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> setNoteFontSize(double size) async {
     await _service.setNoteFontSize(size);
+    notifyListeners();
+  }
+
+  AppColorScheme get colorScheme => _service.colorScheme;
+
+  Future<void> setColorScheme(AppColorScheme scheme) async {
+    await _service.setColorScheme(scheme);
     notifyListeners();
   }
 }

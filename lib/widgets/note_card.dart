@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../database/app_database.dart';
 import '../providers/settings_provider.dart';
-import '../theme/app_theme.dart';
 import 'bullet_text_controller.dart';
 import 'dialogs/copy_note_dialog.dart';
 
@@ -148,7 +147,7 @@ class NoteCard extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: appBlue,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Delete note'),
         content: Text('Delete "${note.title}"?'),
         actions: [
@@ -267,7 +266,7 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: appBlue,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Delete note'),
         content: Text('Delete "${widget.note.title}"?'),
         actions: [
