@@ -84,13 +84,13 @@ class FriendCard extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: colorScheme.secondary,
+                        backgroundColor: colorScheme.tertiary,
                         child: Text(
                           friend.name.isNotEmpty
                               ? friend.name[0].toUpperCase()
                               : '?',
                           style: TextStyle(
-                            color: colorScheme.onSecondary,
+                            color: colorScheme.onTertiary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

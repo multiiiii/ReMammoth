@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../database/app_database.dart';
+import '../models/app_color_scheme.dart';
 import '../providers/settings_provider.dart';
 import '../services/backup_service.dart';
 import 'friends_screen.dart';
 import 'personal_notes_screen.dart';
 
-const _blue = Color(0xFF023B67);
-const _blueMid = Color(0xFF034F8C);
-const _orange = Color(0xFFDE781C);
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void _showSettingsSheet(BuildContext context) {
+    final scheme = context.read<SettingsProvider>().colorScheme;
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: _blueMid,
+      backgroundColor: scheme.midPrimaryColor,
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (_, setState) {
             final settings = sheetContext.read<SettingsProvider>();
+            final scheme = settings.colorScheme;
+            final onBg = AppColorScheme.onColor(scheme.midPrimaryColor);
             final currentSize = settings.noteFontSize;
             return SafeArea(
               child: Padding(
@@ -30,12 +30,101 @@ class HomeScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
+                      'Color theme',
+                      style: TextStyle(
+                        color: onBg,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      childAspectRatio: 2.8,
+                      children: AppColorScheme.values.map((s) {
+                        final isSelected = s == scheme;
+                        final onCard = AppColorScheme.onColor(s.primaryColor);
+                        return GestureDetector(
+                          onTap: () {
+                            settings.setColorScheme(s);
+                            setState(() {});
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
+                              color: s.primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                              border: isSelected
+                                  ? Border.all(
+                                      color: Colors.white, width: 2.5)
+                                  : Border.all(
+                                      color: Colors.white24, width: 1),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 6),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    s.displayName,
+                                    style: TextStyle(
+                                      color: onCard,
+                                      fontSize: 12,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  width: 14,
+                                  height: 14,
+                                  decoration: BoxDecoration(
+                                    color: s.primaryColor,
+                                    shape: BoxShape.circle,
+                                    border:
+                                        Border.all(color: Colors.white38),
+                                  ),
+                                ),
+                                const SizedBox(width: 3),
+                                Container(
+                                  width: 14,
+                                  height: 14,
+                                  decoration: BoxDecoration(
+                                    color: s.accentColor,
+                                    shape: BoxShape.circle,
+                                    border:
+                                        Border.all(color: Colors.white38),
+                                  ),
+                                ),
+                                if (isSelected) ...[
+                                  const SizedBox(width: 4),
+                                  Icon(Icons.check_circle,
+                                      size: 14, color: onCard),
+                                ],
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
+                    Divider(color: onBg.withValues(alpha: 0.2)),
+                    const SizedBox(height: 12),
+                    Text(
                       'Note font size',
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+                        color: onBg,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     SegmentedButton<double>(
@@ -50,10 +139,12 @@ class HomeScreen extends StatelessWidget {
                         setState(() {});
                       },
                       style: SegmentedButton.styleFrom(
-                        backgroundColor: _blue,
-                        foregroundColor: Colors.white,
-                        selectedBackgroundColor: _orange,
-                        selectedForegroundColor: Colors.white,
+                        backgroundColor: scheme.primaryColor,
+                        foregroundColor:
+                            AppColorScheme.onColor(scheme.primaryColor),
+                        selectedBackgroundColor: scheme.accentColor,
+                        selectedForegroundColor:
+                            AppColorScheme.onColor(scheme.accentColor),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -69,31 +160,34 @@ class HomeScreen extends StatelessWidget {
 
   void _showBackupSheet(BuildContext context) {
     final db = context.read<AppDatabase>();
+    final scheme = context.read<SettingsProvider>().colorScheme;
+    final onBg = AppColorScheme.onColor(scheme.midPrimaryColor);
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: _blueMid,
+      backgroundColor: scheme.midPrimaryColor,
       builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.upload_file, color: Colors.white),
-              title: const Text('Export backup',
-                  style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.upload_file, color: onBg),
+              title: Text('Export backup',
+                  style: TextStyle(color: onBg)),
               subtitle: Text('Share your data as a file',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
+                  style: TextStyle(
+                      color: onBg.withValues(alpha: 0.7))),
               onTap: () {
                 Navigator.of(sheetContext).pop();
                 BackupService.exportBackup(db, context);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.download_for_offline_outlined,
-                  color: Colors.white),
-              title: const Text('Import backup',
-                  style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.download_for_offline_outlined, color: onBg),
+              title: Text('Import backup',
+                  style: TextStyle(color: onBg)),
               subtitle: Text('Restore from a backup file',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
+                  style: TextStyle(
+                      color: onBg.withValues(alpha: 0.7))),
               onTap: () {
                 Navigator.of(sheetContext).pop();
                 BackupService.importBackup(db, context);
@@ -108,8 +202,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = context.watch<SettingsProvider>().colorScheme;
+    final onPrimary = AppColorScheme.onColor(scheme.primaryColor);
     return Scaffold(
-      backgroundColor: _blue,
+      backgroundColor: scheme.primaryColor,
       body: SafeArea(
         child: Stack(
           children: [
@@ -123,7 +219,7 @@ class HomeScreen extends StatelessWidget {
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 180),
                       child: Image.asset(
-                        'assets/images/logo.png',
+                        scheme.logoAsset,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -135,7 +231,7 @@ class HomeScreen extends StatelessWidget {
                           .headlineLarge
                           ?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: _orange,
+                            color: scheme.accentColor,
                           ),
                     ),
                     const SizedBox(height: 4),
@@ -143,7 +239,7 @@ class HomeScreen extends StatelessWidget {
                       'Remember what matters',
                       style:
                           Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.white.withValues(alpha: 0.75),
+                                color: onPrimary.withValues(alpha: 0.75),
                               ),
                     ),
                     const Spacer(flex: 2),
@@ -178,15 +274,14 @@ class HomeScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.settings_outlined,
-                        color: Colors.white),
+                    icon: Icon(Icons.settings_outlined, color: onPrimary),
                     tooltip: 'Settings',
                     onPressed: () => _showSettingsSheet(context),
                   ),
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.settings_backup_restore,
-                      color: Colors.white,
+                      color: onPrimary,
                     ),
                     tooltip: 'Backup & Restore',
                     onPressed: () => _showBackupSheet(context),
@@ -214,6 +309,7 @@ class _HomeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = context.watch<SettingsProvider>().colorScheme;
     return SizedBox(
       width: double.infinity,
       height: 56,
@@ -222,8 +318,8 @@ class _HomeButton extends StatelessWidget {
         icon: Icon(icon),
         label: Text(label),
         style: FilledButton.styleFrom(
-          backgroundColor: _orange,
-          foregroundColor: Colors.white,
+          backgroundColor: scheme.accentColor,
+          foregroundColor: AppColorScheme.onColor(scheme.accentColor),
           textStyle: Theme.of(context).textTheme.titleMedium,
         ),
       ),

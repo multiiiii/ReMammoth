@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/app_color_scheme.dart';
+
 const appBlue = Color(0xFF023B67);
 const appBlueMid = Color(0xFF034F8C);
 const appOrange = Color(0xFFDE781C);
@@ -61,6 +63,71 @@ final ThemeData appTheme = ThemeData(
     inversePrimary: _navyLight,
   ),
 );
+
+ThemeData buildThemeForScheme(AppColorScheme scheme) {
+  final primary = scheme.primaryColor;
+  final accent = scheme.accentColor;
+  final mid = scheme.midPrimaryColor;
+  final onPrimary = AppColorScheme.onColor(primary);
+  final onAccent = AppColorScheme.onColor(accent);
+  final onMid = AppColorScheme.onColor(mid);
+
+  return ThemeData(
+    useMaterial3: true,
+    canvasColor: primary,
+    scaffoldBackgroundColor: primary,
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
+    cardTheme: const CardThemeData(surfaceTintColor: Colors.transparent),
+    popupMenuTheme: PopupMenuThemeData(
+      color: mid,
+      textStyle: TextStyle(color: onMid),
+      iconColor: onMid,
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: primary,
+      foregroundColor: onPrimary,
+      iconTheme: IconThemeData(color: onPrimary),
+      actionsIconTheme: IconThemeData(color: onPrimary),
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+    ),
+    colorScheme: ColorScheme(
+      brightness: Brightness.light,
+      primary: primary,
+      onPrimary: onPrimary,
+      primaryContainer: accent,
+      onPrimaryContainer: onAccent,
+      secondary: accent,
+      onSecondary: onAccent,
+      secondaryContainer: accent,
+      onSecondaryContainer: onAccent,
+      tertiary: const Color(0xFF555555),
+      onTertiary: Colors.white,
+      tertiaryContainer: const Color(0xFFE0E0E0),
+      onTertiaryContainer: const Color(0xFF1A1A1A),
+      error: const Color(0xFFD32F2F),
+      onError: Colors.white,
+      errorContainer: const Color(0xFFFFDAD6),
+      onErrorContainer: const Color(0xFF410002),
+      surface: const Color(0xFFF5F5F5),
+      onSurface: const Color(0xFF1A1A1A),
+      surfaceContainerHighest: const Color(0xFFE0E0E0),
+      onSurfaceVariant: const Color(0xFF555555),
+      outline: const Color(0xFF9E9E9E),
+      outlineVariant: const Color(0xFFBDBDBD),
+      shadow: Colors.black,
+      scrim: Colors.black,
+      inverseSurface: const Color(0xFF1A1A1A),
+      onInverseSurface: const Color(0xFFF5F5F5),
+      inversePrimary: accent,
+    ),
+  );
+}
 
 final ThemeData appDarkTheme = ThemeData(
   useMaterial3: true,
