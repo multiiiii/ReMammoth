@@ -13,7 +13,8 @@ ReMammoth is a simple, offline-first personal memory app for Android. Keep notes
 - **Gift ideas** — every new friend automatically gets a pinned "Gift ideas" note ready to fill in
 - **Pin notes** — pin important notes to the top of any list
 - **Inline editing** — tap any note to open it full-screen and edit directly; changes save automatically when you close
-- **Sort** — sort notes by newest, oldest, or alphabetically
+- **Sort** — sort notes by newest, oldest, alphabetically, or last edited; friends can be sorted by newest, oldest, or alphabetically
+- **Color schemes** — choose from four themes (Classic Blue, Fire & Ice, Dark Mode, Jungle) in the Settings sheet; the Android launcher icon updates to match
 - **Fully offline** — all data is stored locally on your device, nothing leaves it
 
 ---
@@ -47,6 +48,9 @@ flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 
 # Run in debug mode
+# Note: if you previously selected a non-default color scheme on the device,
+# switch back to Classic Blue before running — flutter run launches the app
+# via MainActivity, which Android disables when a non-default scheme is active.
 flutter run
 
 # Build a release APK
