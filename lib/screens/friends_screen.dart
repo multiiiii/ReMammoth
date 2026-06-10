@@ -68,6 +68,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
           SortMenu(
             currentSort: _sortOrder,
             onSortChanged: (s) => setState(() => _sortOrder = s),
+            showLastEdited: false,
           ),
         ],
       ),

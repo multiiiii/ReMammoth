@@ -29,6 +29,8 @@ class NotesDao extends DatabaseAccessor<AppDatabase> with _$NotesDaoMixin {
               return OrderingTerm.asc(n.createdAt);
             case SortOrder.alphabetical:
               return OrderingTerm.asc(n.title);
+            case SortOrder.lastEdited:
+              return OrderingTerm.desc(n.updatedAt);
           }
         },
       ]);

@@ -7,10 +7,12 @@ class SortMenu extends StatelessWidget {
     super.key,
     required this.currentSort,
     required this.onSortChanged,
+    this.showLastEdited = true,
   });
 
   final SortOrder currentSort;
   final ValueChanged<SortOrder> onSortChanged;
+  final bool showLastEdited;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,8 @@ class SortMenu extends StatelessWidget {
         _item(SortOrder.newest, 'Newest first', Icons.arrow_downward),
         _item(SortOrder.oldest, 'Oldest first', Icons.arrow_upward),
         _item(SortOrder.alphabetical, 'A \u2192 Z', Icons.sort_by_alpha),
+        if (showLastEdited)
+          _item(SortOrder.lastEdited, 'Last edited', Icons.edit_outlined),
       ],
     );
   }

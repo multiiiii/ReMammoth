@@ -21,6 +21,8 @@ class FriendsDao extends DatabaseAccessor<AppDatabase> with _$FriendsDaoMixin {
               return OrderingTerm.asc(f.createdAt);
             case SortOrder.alphabetical:
               return OrderingTerm.asc(f.name);
+            case SortOrder.lastEdited:
+              return OrderingTerm.desc(f.createdAt);
           }
         },
       ]);
