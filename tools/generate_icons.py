@@ -44,13 +44,17 @@ except ImportError:
 # Configuration — edit here
 # ---------------------------------------------------------------------------
 
-LOGO_FRACTION = 0.66  # fraction of foreground canvas; safe zone ceiling = 0.667
+LOGO_FRACTION = 0.70  # fraction of foreground canvas; safe zone ceiling = 0.667
 
+# Each entry: (icon_prefix, source_filename, background_rgb)
+# icon_prefix determines output filenames:
+#   legacy flat  → {prefix}.png
+#   adaptive fg  → {prefix}_foreground.png
 SCHEMES = [
-    # (name,       source_filename,          background_rgb)
-    ("fireice",  "app_logo_fireice.webp",  (110, 233, 239)),
-    ("darkmode", "app_logo_darkmode.webp", ( 24,  10,  10)),
-    ("jungle",   "app_logo_jungle.webp",   (156, 176, 128)),
+    ("ic_launcher",          "app_logo.png",           (  1,  58, 101)),
+    ("ic_launcher_fireice",  "app_logo_fireice.webp",  (110, 233, 239)),
+    ("ic_launcher_darkmode", "app_logo_darkmode.webp", ( 24,  10,  10)),
+    ("ic_launcher_jungle",   "app_logo_jungle.webp",   (156, 176, 128)),
 ]
 
 DENSITIES = [
@@ -109,8 +113,9 @@ PREVIEW_BG = (240, 240, 240)
 
 
 def generate_preview(fractions: list[float] = PREVIEW_FRACTIONS) -> None:
-    sources = [(name, Image.open(ASSETS / fname).convert("RGBA"), bg)
-               for name, fname, bg in SCHEMES]
+    sources = [(prefix.replace("ic_launcher_", "") or "default",
+                Image.open(ASSETS / fname).convert("RGBA"), bg)
+               for prefix, fname, bg in SCHEMES]
 
     cols = len(fractions)
     rows = len(sources)
@@ -130,24 +135,19 @@ def generate_preview(fractions: list[float] = PREVIEW_FRACTIONS) -> None:
     except OSError:
         font = ImageFont.load_default()
 
-    # Column headers (fraction values)
     for c, frac in enumerate(fractions):
         x = row_label_w + c * cell_w + PREVIEW_PADDING // 2
         draw.text((x, PREVIEW_PADDING // 2), f"{frac:.0%}", fill=(60, 60, 60), font=font)
 
-    for r, (name, source, bg_rgb) in enumerate(sources):
+    for r, (label, source, bg_rgb) in enumerate(sources):
         y_base = header_h + r * cell_h
-        # Row label
-        draw.text((4, y_base + PREVIEW_CELL_PX // 2), name, fill=(60, 60, 60), font=font)
+        draw.text((4, y_base + PREVIEW_CELL_PX // 2), label, fill=(60, 60, 60), font=font)
         for c, frac in enumerate(fractions):
             fg = _make_foreground(source, PREVIEW_CELL_PX, frac, bg_rgb)
             masked = _apply_circle_mask(fg)
-            # Paste on white circle background so transparency shows correctly
             bg_cell = Image.new("RGB", (PREVIEW_CELL_PX, PREVIEW_CELL_PX), PREVIEW_BG)
             bg_cell.paste(masked, (0, 0), masked)
-            x = row_label_w + c * cell_w
-            y = y_base
-            sheet.paste(bg_cell, (x, y))
+            sheet.paste(bg_cell, (row_label_w + c * cell_w, y_base))
 
     out = TOOLS / "preview.png"
     sheet.save(out)
@@ -159,21 +159,15 @@ def generate_preview(fractions: list[float] = PREVIEW_FRACTIONS) -> None:
 # ---------------------------------------------------------------------------
 
 def generate_all(logo_fraction: float = LOGO_FRACTION) -> None:
-    for scheme_name, source_fname, bg_rgb in SCHEMES:
+    for prefix, source_fname, bg_rgb in SCHEMES:
         source = Image.open(ASSETS / source_fname).convert("RGBA")
         for density, legacy_px, fg_px in DENSITIES:
             folder = RES / density
-
-            # Legacy flat icon
             legacy = source.resize((legacy_px, legacy_px), Image.LANCZOS).convert("RGB")
-            legacy.save(folder / f"ic_launcher_{scheme_name}.png")
-
-            # Adaptive foreground
+            legacy.save(folder / f"{prefix}.png")
             fg = _make_foreground(source, fg_px, logo_fraction, bg_rgb)
-            fg.save(folder / f"ic_launcher_{scheme_name}_foreground.png")
-
-        print(f"  {scheme_name}: done (fraction={logo_fraction:.0%})")
-
+            fg.save(folder / f"{prefix}_foreground.png")
+        print(f"  {prefix}: done (fraction={logo_fraction:.0%})")
     print("All icons generated.")
 
 
