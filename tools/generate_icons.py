@@ -44,7 +44,7 @@ except ImportError:
 # Configuration — edit here
 # ---------------------------------------------------------------------------
 
-LOGO_FRACTION = 0.62  # fraction of foreground canvas; safe zone ceiling = 0.667
+LOGO_FRACTION = 0.66  # fraction of foreground canvas; safe zone ceiling = 0.667
 
 SCHEMES = [
     # (name,       source_filename,          background_rgb)
