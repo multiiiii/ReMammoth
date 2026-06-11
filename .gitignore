@@ -2,6 +2,9 @@
 .claude/
 .metadata
 
+# Icon generation preview (tools/generate_icons.py --preview)
+tools/preview.png
+
 # Old/archived assets not used by the app
 assets/images/old/
 
