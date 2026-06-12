@@ -299,8 +299,7 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
       },
       child: SizedBox(
         // Tight height so Expanded inside Column has a finite bound.
-        height: MediaQuery.sizeOf(context).height * 0.92
-            - MediaQuery.viewInsetsOf(context).bottom,
+        height: MediaQuery.sizeOf(context).height * 0.92,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -442,6 +441,9 @@ class _NoteExpandedSheetState extends State<_NoteExpandedSheet> {
                         contentPadding: EdgeInsets.zero,
                       ),
                       maxLines: null,
+                      scrollPadding: EdgeInsets.only(
+                        bottom: MediaQuery.viewInsetsOf(context).bottom + 20,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text(
