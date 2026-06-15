@@ -2,6 +2,12 @@
 .claude/
 .metadata
 
+# Release signing — NEVER commit these
+android/key.properties
+*.jks
+*.keystore
+*.p12
+
 # Icon generation preview (tools/generate_icons.py --preview)
 tools/preview.png
 
