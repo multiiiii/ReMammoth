@@ -172,6 +172,43 @@ def generate_all(logo_fraction: float = LOGO_FRACTION) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Play Store assets
+# ---------------------------------------------------------------------------
+
+# Default Classic Blue scheme values
+_DEFAULT_SOURCE = "app_logo.png"
+_DEFAULT_BG     = (1, 58, 101)   # appBlue #023B67
+
+def generate_store_assets(logo_fraction: float = LOGO_FRACTION) -> None:
+    """Generate store-assets/ic_launcher_512.png and store-assets/feature_graphic.png."""
+    out_dir = REPO / "store-assets"
+    out_dir.mkdir(exist_ok=True)
+
+    source = Image.open(ASSETS / _DEFAULT_SOURCE).convert("RGBA")
+    bg = _DEFAULT_BG
+
+    # 512×512 Play Store icon — same approach as launcher icons
+    icon = _make_foreground(source, 512, logo_fraction, bg).convert("RGB")
+    icon_path = out_dir / "ic_launcher_512.png"
+    icon.save(icon_path)
+    print(f"  App icon:        {icon_path}")
+
+    # 1024×500 feature graphic — logo centred, height = 60% of canvas height
+    fw, fh = 1024, 500
+    logo_px = round(fh * 0.60)
+    canvas = Image.new("RGB", (fw, fh), bg)
+    logo = source.resize((logo_px, logo_px), Image.LANCZOS)
+    x = (fw - logo_px) // 2
+    y = (fh - logo_px) // 2
+    canvas.paste(logo, (x, y), logo)
+    feature_path = out_dir / "feature_graphic.png"
+    canvas.save(feature_path)
+    print(f"  Feature graphic: {feature_path}")
+
+    print("Store assets generated.")
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
@@ -181,6 +218,11 @@ if __name__ == "__main__":
         "--preview",
         action="store_true",
         help="Generate tools/preview.png contact sheet instead of writing mipmap files",
+    )
+    parser.add_argument(
+        "--store-assets",
+        action="store_true",
+        help="Generate store-assets/ic_launcher_512.png and store-assets/feature_graphic.png",
     )
     parser.add_argument(
         "--fraction",
@@ -197,6 +239,9 @@ if __name__ == "__main__":
         if args.fraction is not None and args.fraction not in fracs:
             fracs = sorted(set(fracs + [args.fraction]))
         generate_preview(fracs)
+    elif args.store_assets:
+        print(f"Generating store assets at LOGO_FRACTION={fraction:.0%} …")
+        generate_store_assets(fraction)
     else:
         print(f"Generating icons at LOGO_FRACTION={fraction:.0%} …")
         generate_all(fraction)
